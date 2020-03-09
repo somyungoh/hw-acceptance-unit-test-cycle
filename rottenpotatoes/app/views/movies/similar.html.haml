@@ -1,0 +1,9 @@
+-#  This file is app/views/movies/similar.html.haml
+
+%h3 List of similar movies (same director)
+
+%ul
+  - @same_director_movies.each do |movie|
+    %li= movie.title
+
+= link_to 'go to home', movies_path

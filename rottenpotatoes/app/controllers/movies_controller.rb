@@ -1,5 +1,8 @@
 class MoviesController < ApplicationController
-
+  
+  # let helper know these private methods
+  helper_method :movies_with_same_director
+  
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date, :director)
   end
@@ -59,6 +62,23 @@ class MoviesController < ApplicationController
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
+  end
+  
+  # Added: Method to find the movies with the same director
+  def similar
+    
+    # retrieve information
+    director = Movie.find(params[:id]).director
+    title    = Movie.find(params[:id]).title
+    
+    # check exception
+    if director.blank? or director.nil?
+      redirect_to movies_path
+      flash[:notice] = "'#{title}' has no director info"
+    else
+      @same_director_movies = Movie.where(director:director)
+      flash[:notice] = "successfully found moives with same director"
+    end
   end
 
 end
